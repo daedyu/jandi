@@ -12,11 +12,10 @@ struct ReminderHeatmapView: View {
                     HeatmapGridView(data: viewModel.completionData,
                                selectedDate: $viewModel.selectedDate)
                         .frame(height: 200)
-                        .id("heatmap")  // ScrollViewReader용 ID
+                        .id("heatmap")
                 }
                 .onAppear {
                     scrollViewProxy = proxy
-                    // 약간의 지연 후 스크롤 수행 (뷰가 완전히 로드된 후)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation {
                             proxy.scrollTo("heatmap", anchor: .trailing)
