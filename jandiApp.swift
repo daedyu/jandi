@@ -4,7 +4,7 @@ import SwiftUI
 struct jandiApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ReminderHeatmapView()
         }
     }
 }
