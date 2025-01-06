@@ -25,7 +25,7 @@ struct ReminderHeatmapView: View {
             }
             
             if let selectedDate = viewModel.selectedDate {
-                let count = viewModel.completionData[selectedDate] ?? 0
+                let count = viewModel.completionData[viewModel.getDate(selectedDate)] ?? 0
                 VStack(spacing: 8) {
                     Text(viewModel.formatDate(selectedDate))
                         .font(.subheadline)

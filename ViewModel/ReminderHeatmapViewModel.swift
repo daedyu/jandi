@@ -1,5 +1,6 @@
 import EventKit
 import SwiftUI
+import Foundation
 
 class ReminderHeatmapViewModel: ObservableObject {
     private let eventStore = EKEventStore()
@@ -45,6 +46,7 @@ class ReminderHeatmapViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.completionData = dailyCount
+                print(self.completionData)
             }
         }
     }
@@ -53,5 +55,11 @@ class ReminderHeatmapViewModel: ObservableObject {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy년 MM월 dd일"
         return formatter.string(from: date)
+    }
+    
+    func getDate(_ date:Date) -> Date {
+        let calendar = Calendar.current
+        let newDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)!
+        return newDate
     }
 }
