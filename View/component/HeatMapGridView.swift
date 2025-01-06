@@ -3,6 +3,7 @@ import SwiftUI
 struct HeatmapGridView: View {
     let data: [Date: Int]
     @Binding var selectedDate: Date?
+    @Binding var isSelected: Bool
     
     private let columns = Array(repeating: GridItem(.fixed(20)), count: 53)
     private let rows = 7
@@ -16,9 +17,12 @@ struct HeatmapGridView: View {
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             if selectedDate == date {
+                                print("clicked: asdasdas")
                                 selectedDate = nil
+                                isSelected = false
                             } else {
                                 selectedDate = date
+                                isSelected = true
                             }
                         }
                     }
@@ -49,8 +53,6 @@ struct HeatmapGridView: View {
     
     private func colorForDate(_ date: Date) -> Color {
         let count = data[Calendar.current.startOfDay(for: date)] ?? 0
-        
-        print(count)
         
         switch count {
         case 0:

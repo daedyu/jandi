@@ -4,13 +4,15 @@ import EventKit
 struct ReminderHeatmapView: View {
     @StateObject private var viewModel = ReminderHeatmapViewModel()
     @State private var scrollViewProxy: ScrollViewProxy? = nil
+    @State private var isDateSelected: Bool = true
     
     var body: some View {
         VStack(spacing: 16) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HeatmapGridView(data: viewModel.completionData,
-                               selectedDate: $viewModel.selectedDate)
+                               selectedDate: $viewModel.selectedDate,
+                               isSelected: $isDateSelected)
                         .frame(height: 200)
                         .id("heatmap")
                 }
@@ -24,7 +26,7 @@ struct ReminderHeatmapView: View {
                 }
             }
             
-            if let selectedDate = viewModel.selectedDate {
+            if let selectedDate = viewModel.selectedDate, isDateSelected {
                 let count = viewModel.completionData[viewModel.getDate(selectedDate)] ?? 0
                 VStack(spacing: 8) {
                     Text(viewModel.formatDate(selectedDate))
@@ -36,6 +38,11 @@ struct ReminderHeatmapView: View {
                 .padding(.horizontal, 16)
                 .background(Color(.systemGray6))
                 .cornerRadius(8)
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isDateSelected = false
+                    }
+                }
             }
         }
         .padding()

@@ -46,7 +46,6 @@ class ReminderHeatmapViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.completionData = dailyCount
-                print(self.completionData)
             }
         }
     }
