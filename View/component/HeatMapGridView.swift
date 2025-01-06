@@ -17,7 +17,6 @@ struct HeatmapGridView: View {
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             if selectedDate == date {
-                                print("clicked: asdasdas")
                                 selectedDate = nil
                                 isSelected = false
                             } else {

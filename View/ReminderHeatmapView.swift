@@ -8,9 +8,21 @@ struct ReminderHeatmapView: View {
     
     var body: some View {
         ZStack {
-            BackgroundUI()
-            
+            BackgroundUI().ignoresSafeArea()
             VStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("미리알림 지속일")
+                            .font(.headline)
+                        Spacer()
+                    }
+                    
+                    DurationView(data: viewModel.completionData)
+                }
+                .padding(20)
+                .background(Color(.tertiarySystemBackground))
+                .cornerRadius(18)
+                
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Text("미리알림 완료 히스토리")
@@ -63,7 +75,9 @@ struct ReminderHeatmapView: View {
                 }
                 .padding(20)
                 .background(Color(.tertiarySystemBackground))
-                .cornerRadius(15)
+                .cornerRadius(18)
+                
+                Spacer()
             }
 
             .padding()
@@ -71,7 +85,6 @@ struct ReminderHeatmapView: View {
                 viewModel.requestAccess()
             }
         }
-        .ignoresSafeArea()
     }
 }
 
