@@ -28,6 +28,7 @@ struct HeatmapGridView: View {
                     )
             }
         }
+        .padding(.horizontal)
     }
     
     private func getDatesGrid() -> [Date] {
@@ -48,6 +49,8 @@ struct HeatmapGridView: View {
     
     private func colorForDate(_ date: Date) -> Color {
         let count = data[Calendar.current.startOfDay(for: date)] ?? 0
+        
+        print(count)
         
         switch count {
         case 0:

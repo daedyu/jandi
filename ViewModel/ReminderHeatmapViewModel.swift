@@ -4,6 +4,7 @@ import SwiftUI
 class ReminderHeatmapViewModel: ObservableObject {
     private let eventStore = EKEventStore()
     @Published var completionData: [Date: Int] = [:]
+    @Published var selectedDate: Date?
     
     func requestAccess() {
         if #available(iOS 17.0, *) {
@@ -24,8 +25,11 @@ class ReminderHeatmapViewModel: ObservableObject {
     func fetchCompletedReminders() {
         let endDate = Date()
         let startDate = Calendar.current.date(byAdding: .year, value: -1, to: endDate)!
+        let calendar = Calendar.current
         
-        let predicate = eventStore.predicateForReminders(in: nil)
+        let predicate = eventStore.predicateForCompletedReminders(withCompletionDateStarting: startDate,
+                                                                ending: endDate,
+                                                                calendars: nil)
         
         eventStore.fetchReminders(matching: predicate) { reminders in
             guard let reminders = reminders else { return }
@@ -33,9 +37,8 @@ class ReminderHeatmapViewModel: ObservableObject {
             var dailyCount: [Date: Int] = [:]
             
             for reminder in reminders {
-                if let completionDate = reminder.completionDate,
-                   completionDate >= startDate && completionDate <= endDate {
-                    let dateKey = Calendar.current.startOfDay(for: completionDate)
+                if let completionDate = reminder.completionDate {
+                    let dateKey = calendar.startOfDay(for: completionDate)
                     dailyCount[dateKey, default: 0] += 1
                 }
             }
@@ -44,5 +47,11 @@ class ReminderHeatmapViewModel: ObservableObject {
                 self.completionData = dailyCount
             }
         }
+    }
+    
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 MM월 dd일"
+        return formatter.string(from: date)
     }
 }

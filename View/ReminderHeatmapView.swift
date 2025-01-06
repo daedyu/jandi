@@ -3,12 +3,27 @@ import EventKit
 
 struct ReminderHeatmapView: View {
     @StateObject private var viewModel = ReminderHeatmapViewModel()
+    @State private var scrollViewProxy: ScrollViewProxy? = nil
     
     var body: some View {
         VStack(spacing: 16) {
-            HeatmapGridView(data: viewModel.completionData,
-                       selectedDate: $viewModel.selectedDate)
-                .frame(height: 200)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HeatmapGridView(data: viewModel.completionData,
+                               selectedDate: $viewModel.selectedDate)
+                        .frame(height: 200)
+                        .id("heatmap")  // ScrollViewReader용 ID
+                }
+                .onAppear {
+                    scrollViewProxy = proxy
+                    // 약간의 지연 후 스크롤 수행 (뷰가 완전히 로드된 후)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        withAnimation {
+                            proxy.scrollTo("heatmap", anchor: .trailing)
+                        }
+                    }
+                }
+            }
             
             if let selectedDate = viewModel.selectedDate {
                 let count = viewModel.completionData[selectedDate] ?? 0
@@ -29,4 +44,8 @@ struct ReminderHeatmapView: View {
             viewModel.requestAccess()
         }
     }
+}
+
+#Preview {
+    ReminderHeatmapView()
 }
