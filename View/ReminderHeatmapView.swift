@@ -9,7 +9,7 @@ struct ReminderHeatmapView: View {
     var body: some View {
         ZStack {
             BackgroundUI().ignoresSafeArea()
-            VStack(spacing: 16) {
+            ScrollView() {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Text("미리알림 지속일")
@@ -32,17 +32,13 @@ struct ReminderHeatmapView: View {
                     
                     ScrollViewReader { proxy in
                         ScrollView(.horizontal, showsIndicators: false) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                YearMonthLabelsView()
-                                    .padding(.leading, 16)
-                                
-                                HeatmapGridView(
-                                    data: viewModel.completionData,
-                                    selectedDate: $viewModel.selectedDate,
-                                    isSelected: $isDateSelected
-                                )
-                                    .frame(height: 200)
-                            } .id("heatmap")
+                            HeatmapGridView(
+                                data: viewModel.completionData,
+                                selectedDate: $viewModel.selectedDate,
+                                isSelected: $isDateSelected
+                            )
+                                .frame(height: 200)
+                                .id("heatmap")
                         }
                         .onAppear {
                             scrollViewProxy = proxy
@@ -78,6 +74,9 @@ struct ReminderHeatmapView: View {
                 .cornerRadius(18)
                 
                 Spacer()
+            }
+            .refreshable {
+                viewModel.requestAccess()
             }
 
             .padding()
