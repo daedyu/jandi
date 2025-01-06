@@ -53,7 +53,7 @@ struct ReminderHeatmapView: View {
                         .padding(.vertical, 8)
                         .padding(.horizontal, 16)
                         .background(Color(.systemGray6))
-                        .cornerRadius(8)
+                        .cornerRadius(12)
                         .onTapGesture {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 isDateSelected = false
@@ -63,7 +63,7 @@ struct ReminderHeatmapView: View {
                 }
                 .padding(20)
                 .background(Color(.tertiarySystemBackground))
-                .cornerRadius(8)
+                .cornerRadius(15)
             }
 
             .padding()
