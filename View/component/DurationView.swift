@@ -27,7 +27,8 @@ struct DurationView: View {
     var body: some View {
         if durationState.did {
             Text("🔥 \(durationState.count)")
-                .font(.largeTitle)
+//                .font(.largeTitle)
+                .font(.bmjua)
                 .fontWeight(.bold)
             if !durationState.isDurated {
                 Text("오늘도 계획을 실천하세요!!")

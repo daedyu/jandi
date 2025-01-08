@@ -9,71 +9,75 @@ struct ReminderHeatmapView: View {
     var body: some View {
         ZStack {
             BackgroundUI().ignoresSafeArea()
-            ScrollView() {
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text("미리알림 지속일")
-                            .font(.headline)
-                        Spacer()
+            ScrollView(.vertical, showsIndicators: true) {
+                LazyVStack(spacing: 15) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("미리알림 지속일")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        
+                        DurationView(data: viewModel.completionData)
                     }
+                    .padding(20)
+                    .background(Color(.tertiarySystemBackground))
+                    .cornerRadius(18)
                     
-                    DurationView(data: viewModel.completionData)
-                }
-                .padding(20)
-                .background(Color(.tertiarySystemBackground))
-                .cornerRadius(18)
-                
-                VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        Text("미리알림 완료 히스토리")
-                            .font(.headline)
-                        Spacer()
-                    }
-                    
-                    ScrollViewReader { proxy in
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HeatmapGridView(
-                                data: viewModel.completionData,
-                                selectedDate: $viewModel.selectedDate,
-                                isSelected: $isDateSelected
-                            )
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack {
+                            Text("미리알림 완료 히스토리")
+                                .font(.headline)
+                            Spacer()
+                        }
+                        
+                        ScrollViewReader { proxy in
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HeatmapGridView(
+                                    data: viewModel.completionData,
+                                    year: 2024,
+                                    selectedDate: $viewModel.selectedDate,
+                                    isSelected: $isDateSelected
+                                )
                                 .frame(height: 200)
                                 .id("heatmap")
+                            }
+                            .onAppear {
+                                scrollViewProxy = proxy
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation {
+                                        proxy.scrollTo("heatmap", anchor: .trailing)
+                                    }
+                                }
+                            }
                         }
-                        .onAppear {
-                            scrollViewProxy = proxy
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation {
-                                    proxy.scrollTo("heatmap", anchor: .trailing)
+                        
+                        if let selectedDate = viewModel.selectedDate, isDateSelected {
+                            let count = viewModel.completionData[viewModel.getDate(selectedDate)] ?? 0
+                            VStack(spacing: 8) {
+                                Text(viewModel.formatDate(selectedDate))
+                                    .font(.subheadline)
+                                Text("완료된 미리알림: \(count)개")
+                                    .font(.headline)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    viewModel.selectedDate = nil
+                                    isDateSelected = false
                                 }
                             }
                         }
                     }
-                    
-                    if let selectedDate = viewModel.selectedDate, isDateSelected {
-                        let count = viewModel.completionData[viewModel.getDate(selectedDate)] ?? 0
-                        VStack(spacing: 8) {
-                            Text(viewModel.formatDate(selectedDate))
-                                .font(.subheadline)
-                            Text("완료된 미리알림: \(count)개")
-                                .font(.headline)
-                        }
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 16)
-                        .background(Color(.systemGray6))
-                        .cornerRadius(12)
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                isDateSelected = false
-                            }
-                        }
-                    }
+                    .padding(20)
+                    .background(Color(.tertiarySystemBackground))
+                    .cornerRadius(18)
+
+                    Spacer()
                 }
-                .padding(20)
-                .background(Color(.tertiarySystemBackground))
-                .cornerRadius(18)
-                
-                Spacer()
             }
             .refreshable {
                 viewModel.requestAccess()

@@ -4,5 +4,9 @@
 <dict>
 	<key>NSRemindersFullAccessUsageDescription</key>
 	<string>미리알림 완료 데이터를 표시하기 위해 접근 권한이 필요합니다.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>BMJUA.ttf</string>
+	</array>
 </dict>
 </plist>
