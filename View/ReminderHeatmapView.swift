@@ -5,8 +5,9 @@ struct ReminderHeatmapView: View {
     @StateObject private var viewModel = ReminderHeatmapViewModel()
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isDateSelected: Bool = true
-    @State var date: Date = Date()
-    var yearRange = (1900...2300)
+    @State private var isPickerPresented = false
+    @State var selectedYear: Int = 2025
+    var yearRange = Array(1900...2300)
     
     var body: some View {
         ZStack {
@@ -27,30 +28,33 @@ struct ReminderHeatmapView: View {
                     .cornerRadius(18)
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        HStack {
-                            Text("미리알림 완료 히스토리")
-                                .font(.headline)
-                            Spacer()
-                            
-                            DatePicker("Date", selection: $date)
-                        }
-                        
+                        YearPickerView(selectedYear: $selectedYear, yearRange: yearRange)
                         ScrollViewReader { proxy in
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HeatmapGridView(
                                     data: viewModel.completionData,
-                                    year: 2024,
+                                    year: selectedYear,
                                     selectedDate: $viewModel.selectedDate,
                                     isSelected: $isDateSelected
                                 )
                                 .frame(height: 200)
                                 .id("heatmap")
                             }
-                            .onAppear {
+                            .onChange(of: selectedYear) {
                                 scrollViewProxy = proxy
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                     withAnimation {
                                         proxy.scrollTo("heatmap", anchor: .trailing)
+                                    }
+                                }
+                            }
+                            .onAppear {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    scrollViewProxy = proxy
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                        withAnimation {
+                                            proxy.scrollTo("heatmap", anchor: .trailing)
+                                        }
                                     }
                                 }
                             }
