@@ -30,7 +30,7 @@ struct DurationView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             if !durationState.isDurated {
-                Text("오늘도 실천하세요!!")
+                Text("오늘도 계획을 실천하세요!!")
             }
         } else {
             Text("빨리 계획을 실천하세요!!")
