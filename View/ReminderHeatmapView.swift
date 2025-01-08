@@ -5,6 +5,8 @@ struct ReminderHeatmapView: View {
     @StateObject private var viewModel = ReminderHeatmapViewModel()
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isDateSelected: Bool = true
+    @State var date: Date = Date()
+    var yearRange = (1900...2300)
     
     var body: some View {
         ZStack {
@@ -29,6 +31,8 @@ struct ReminderHeatmapView: View {
                             Text("미리알림 완료 히스토리")
                                 .font(.headline)
                             Spacer()
+                            
+                            DatePicker("Date", selection: $date)
                         }
                         
                         ScrollViewReader { proxy in
