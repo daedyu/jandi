@@ -14,7 +14,7 @@ struct YearPickerView: View {
                 showPicker = true
             }) {
                 HStack {
-                    Text("\(selectedYear)")
+                    Text(formatNumber(selectedYear))
                         .foregroundColor(.primary)
                     Image(systemName: "chevron.down")
                         .foregroundColor(.gray)
@@ -42,12 +42,19 @@ struct YearPickerView: View {
                 
                 Picker("년도", selection: $selectedYear) {
                     ForEach(yearRange, id: \.self) { year in
-                        Text("\(year)")
+                        Text(formatNumber(year))
                     }
                 }
                 .pickerStyle(.wheel)
             }
             .presentationDetents([.height(250)])
         }
+    }
+    
+    private func formatNumber(_ number: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.groupingSeparator = ""
+        return formatter.string(from: NSNumber(value: number)) ?? "\(number)"
     }
 }
