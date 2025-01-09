@@ -6,18 +6,26 @@ class ReminderHeatmapViewModel: ObservableObject {
     private let eventStore = EKEventStore()
     @Published var completionData: [Date: Int] = [:]
     @Published var selectedDate: Date?
+    @Published var isAgreed: Bool = false
     
     func requestAccess() {
         if #available(iOS 17.0, *) {
-            eventStore.requestFullAccessToReminders { granted, error in
-                if granted {
-                    self.fetchCompletedReminders()
+            eventStore.requestFullAccessToReminders { [weak self] granted, error in
+                DispatchQueue.main.async {
+                    if granted {
+                        self?.fetchCompletedReminders()
+                        self?.isAgreed = false
+                    } else {
+                        self?.isAgreed = true
+                    }
                 }
             }
         } else {
-            eventStore.requestAccess(to: .reminder) { granted, error in
-                if granted {
-                    self.fetchCompletedReminders()
+            eventStore.requestAccess(to: .reminder) { [weak self] granted, error in
+                DispatchQueue.main.async {
+                    if granted {
+                        self?.fetchCompletedReminders()
+                    }
                 }
             }
         }
