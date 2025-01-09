@@ -96,11 +96,12 @@ struct ReminderHeatmapView: View {
                 viewModel.requestAccess()
             }
         }
-        .alert(isPresented: $viewModel.isAgreed) {
-            Alert(
-                title: Text("미리알림 접근 권한 비활성화됨"),
-                message: Text("미리알림의 접근 권한이 비활성화 되어 있어 자료를 불러올 수 없습니다. 미리알림 접근 권한을 활성화 해주세요")
-            )
+        .alert("미리알림 접근 권한 비활성화됨", isPresented: $viewModel.isAgreed) {
+            Button("설정") {
+                viewModel.openSettings()
+            }
+        } message: {
+            Text("미리알림의 자료를 불러올 수 없습니다. 미리알림 접근 권한을 활성화 해주세요")
         }
     }
 }

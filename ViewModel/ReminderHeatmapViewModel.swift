@@ -69,4 +69,14 @@ class ReminderHeatmapViewModel: ObservableObject {
         let newDate = calendar.date(bySettingHour: 0, minute: 0, second: 0, of: date)!
         return newDate
     }
+    
+    func openSettings() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            if #available(iOS 10.0, *) {
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
+    }
 }
