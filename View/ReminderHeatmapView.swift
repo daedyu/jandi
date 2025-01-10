@@ -6,8 +6,11 @@ struct ReminderHeatmapView: View {
     @State private var scrollViewProxy: ScrollViewProxy? = nil
     @State private var isDateSelected: Bool = true
     @State private var isPickerPresented = false
-    @State var selectedYear: Int = 2025
-    var yearRange = Array(1900...2300)
+    @State var selectedYear: Int =  Calendar.current.component(.year, from: Date())
+    static var yearRange: [Int] = {
+        let currentYear = Calendar.current.component(.year, from: Date())
+        return Array(2011...currentYear)
+    }()
     
     var body: some View {
         ZStack {
@@ -28,7 +31,7 @@ struct ReminderHeatmapView: View {
                     .cornerRadius(18)
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        YearPickerView(selectedYear: $selectedYear, yearRange: yearRange)
+                        YearPickerView(selectedYear: $selectedYear, yearRange: ReminderHeatmapView.yearRange)
                         ScrollViewReader { proxy in
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HeatmapGridView(
