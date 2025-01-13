@@ -93,7 +93,6 @@ struct ReminderHeatmapView: View {
             .refreshable {
                 viewModel.requestAccess()
             }
-
             .padding()
             .onAppear {
                 viewModel.requestAccess()
